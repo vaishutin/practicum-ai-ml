@@ -8,3 +8,18 @@
 - [Задание 6](./Task6/README.md)
 - [Задание 7](./Task7/README.md)
 
+## Проверка проекта
+Быстрая проверка структуры и скриптов:
+```bash
+.venv/bin/python verify_project.py
+```
+
+Проверка RAG в Docker с ключом OpenAI (ключ передаётся аргументом):
+```bash
+.venv/bin/python verify_project.py --openai-key "YOUR_OPENAI_API_KEY"
+```
+
+Полная проверка со скачиванием моделей:
+```bash
+.venv/bin/python verify_project.py --full --allow-downloads --openai-key "YOUR_OPENAI_API_KEY"
+```
