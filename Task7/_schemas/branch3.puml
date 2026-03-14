@@ -1,0 +1,103 @@
+@startuml
+title ASYNC OFFLINE — Logs & Metrics (GoldenDataset → rag-api)
+
+autonumber
+hide footbox
+
+participant "Golden Dataset\n(questions \n+ expected_embedding_ids)" as DATA
+
+participant "rag-kb-updater\n(raw retrieval logs)" as UPD
+
+participant "rag-api" as API
+participant LLM as LLM
+
+box "rag-monitor" #FFF6EE
+  participant MonitorJob as JOB
+  participant "Retrieval-Metrics" as RM
+  participant "RAGAS-Metrics" as RAG
+  database   "Metrics-Store" as MET
+end box
+
+participant "Judge LLM" as JLLM
+
+' =====================================================
+== Step 0: Dataset Source ==
+' =====================================================
+DATA -> UPD : load dataset_version
+UPD -> API : send golden_questions\n for retrieval
+API -> UPD : collecting retrieval\n raw logs
+
+note right of DATA
+Problems:
+- **Dataset Drift** / устаревание датасета
+      +   метрики падают после обновлений KB/конфигов
+- **Label Ambiguity** / неоднозначные эталоны
+      +   корректные ответы считаются неверными
+- **Coverage Bias** / смещение покрытия
+      +   хорошие метрики на тестах, провалы в проде
+end note
+
+' =====================================================
+== Step 1: Raw Retrieval Logs (from rag-kb-updater) ==
+' =====================================================
+JOB -> UPD : load raw logs
+
+note right of UPD
+Problems:
+- **Missing Correlation IDs** / нет request_id
+      +   нельзя связать retrieval и generation
+- **Truncated Logs** / обрезанные логи
+      +   не видно чанки/оценки
+- **Sampling Bias** / логируются не те кейсы
+      +   метрики не отражают реальность
+end note
+
+' =====================================================
+== Step 2: Generation Logs (from rag-api) ==
+' =====================================================
+JOB -> API : send golden questions\n for generate answers
+API -> LLM : golden_questions\n + context from retrieval
+LLM --> API : answers
+API --> JOB : collect answers\n and save generation-log
+
+note right of API
+Проблемы + симптомы:
+- **Partial Answer** / неполный ответ
+      +   покрыта только часть вопроса
+- **Hallucination** / галлюцинация
+      +   выдуманные факты
+- **Unjustified Abstention** / необоснованный отказ
+      +   "нет данных" при наличии контекста
+- **Model Limits Hit** / лимиты модели
+      +   обрывы/пропуски
+end note
+
+' =====================================================
+== Step 3–5: Retrieval Metrics Pipeline ==
+' =====================================================
+JOB -> RM : compute retrieval metrics
+RM --> JOB : retrieval metrics
+JOB --> MET : store retrieval metrics
+
+JOB -> RAG : compute RAGAS metrics
+RAG -> JLLM : judge calls
+JLLM --> RAG : scores
+RAG --> JOB : ragas metrics
+
+JOB -> MET : store ragas metrics
+
+note right of RAG
+Проблемы + симптомы:
+- **Metric False Positive** / ложное завышение
+      +   метрики хорошие, ответы плохие
+- **Metric False Negative** / ложное занижение
+      +   хорошие ответы ругаются
+- **Judge Model Drift** / дрейф судьи
+      +   оценки меняются без изменений системы
+- **Non-Deterministic Scoring** / недетерминизм
+      +   метрики "шумят"
+- **Leakage** / утечка в оценке
+      +   нереалистично высокие оценки
+end note
+
+@enduml

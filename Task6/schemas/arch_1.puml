@@ -1,0 +1,59 @@
+@startuml
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam defaultFontName Arial
+skinparam ranksep 70
+skinparam nodesep 40
+
+title Диаграмма контейнеров RAG-бота с обновлением базы знаний
+
+package "Docker Compose Network" {
+
+  node "Host / VM" as host {
+    artifact "Knowledge Base\n./knowledge_base" as kb
+    folder "Artifacts\n./_artifacts" as workVol
+    folder "Logs\n./logs" as logsVol
+  }
+
+  ' уровень приложений
+  together {
+    rectangle "tg-rag-sw-bot-safe" as bot <<App>>
+    rectangle "rag-api-safe" as api <<App>>
+    rectangle "rag-kb-updater" as upd <<App>>
+  }
+
+  ' уровень хранилища
+  rectangle "chroma\n(ChromaDB Server)" as chroma <<DB>>
+}
+
+' --- потоки ---
+
+bot --> api : HTTP (questions)
+
+api --> chroma : query (Chroma API)
+
+upd --> kb : read files
+upd --> workVol : chunks + manifest
+upd --> chroma : delete + \nupsert (Chroma API)
+upd --> logsVol : logs + jsonl runs summary
+
+' --- пояснения ---
+
+note right of chroma
+Single ChromaDB server.
+Accessed via Chroma HTTP API by:
+- rag-api-safe (query)
+- rag-kb-updater (delete / upsert)
+end note
+
+note right of upd
+Updater runs by schedule (cron).
+Index update logic:
+- detect file changes
+- rewrite chunks
+- delete by rel_doc_id
+- upsert by embedding_id
+end note
+
+@enduml

@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  rag-api-safe:
+    build: ./rag-api
+    container_name: rag-api-safe
+    env_file:
+      - ./rag-api/.env
+      - ./rag-api/.env.secrets
+    ports:
+      - "8002:8002"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ./chroma_db:/app/chroma_db
+    restart: unless-stopped
+    networks:
+      - rag-app-net
+
+  tg-rag-sw-bot-safe:
+    build: tg-rag-sw-bot-safe
+    container_name: tg-rag-sw-bot-safe
+    env_file:
+      - tg-rag-sw-bot-safe/.env
+      - tg-rag-sw-bot-safe/.env.secrets
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOG_DIR=/app/logs
+    ports:
+      - "8001:8001"
+    depends_on:
+      - rag-api-safe
+    restart: unless-stopped
+    networks:
+      - rag-app-net
+
+networks:
+  rag-app-net:
+    driver: bridge

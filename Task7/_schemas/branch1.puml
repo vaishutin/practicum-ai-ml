@@ -1,0 +1,118 @@
+@startuml
+title OFFLINE MAIN — KB update -> chunking -> indexing -> model/config changes
+
+autonumber
+hide footbox
+
+participant "KB (md files)" as KB
+participant "rag-kb-updater" as UPD
+participant Chunker as CH
+participant Embedder as EMB
+participant Indexer as IDX
+database   "Vector DB (Chroma)" as VDB
+participant "Config Repo" as CFG
+
+' =====================================================
+== Step 1: KB Update / Обновление базы знаний ==
+' =====================================================
+UPD -> KB  : regular scan\n / diff from manifest
+KB  --> UPD: changed docs
+
+note right of UPD
+Проблемы + симптомы:
+- **KB Coverage Gap** / пробелы покрытия
+      + по теме стабильно "нет данных" / 0 релевантных документов
+- **KB Staleness** / устаревшая база знаний
+      + ответы "по старой версии", факты не совпадают с обновлениями
+- **KB Contradictions** / противоречия в базе знаний
+      + разные ответы на один вопрос, источники спорят друг с другом
+end note
+
+' =====================================================
+== Step 2: Chunking / Чанкование ==
+' =====================================================
+UPD -> CH  : chunk docs (kb_version)
+CH  --> UPD: chunks\n + metadata (section_path, doc_id)
+
+note right of CH
+Проблемы + симптомы:
+- **Chunk Too Large** / слишком большие чанки
+      + ответ общий, детали "теряются", хотя чанк найден
+- **Chunk Too Small** / слишком маленькие чанки
+      + ответ обрывочный, важные детали не попадают в контекст
+- **Structure Loss** / потеря структуры (заголовков/section_path)
+      + источники без нормального пути секции, сложнее объяснить ответ
+- **Duplicate Chunks** / дубли чанков (overlap)
+      + в top-k много одинакового, мало разнообразия
+end note
+
+' =====================================================
+== Step 3: Indexing / Индексация ==
+' =====================================================
+UPD -> EMB : embed chunks\n (embedder_version)
+EMB --> UPD: vectors
+
+note right of EMB #FFF2CC
+Проблемы + симптомы:
+- **Embedding Model Mismatch** / несовпадение модели эмбеддингов
+        + резкая деградация retrieval после смены модели
+- **Embedding Drift** / дрейф эмбеддингов
+        + старые и новые документы хуже сравниваются между собой
+- **Different Models for Index & Query** / разные модели для индекса и запроса
+        + релевантные документы перестают находиться
+- **Wrong Normalization** / неверная нормализация векторов
+        + поиск возвращает случайные/нерелевантные чанки
+end note
+
+UPD -> IDX : build/update index (index_version)
+IDX -> VDB : upsert/delete vectors +\n metadata
+VDB --> IDX: ACK
+IDX --> UPD: build summary\n (#docs/#chunks/#errors)
+
+note right of VDB
+Проблемы + симптомы:
+- **Partial/Stale Index** / частичный или устаревший индекс
+      + документ есть в KB, но не находится
+- **Wrong Collection/Namespace** / не та коллекция или неймспейс
+      + retrieval выглядит как "другая база"
+- **Metadata Corruption** / ошибки метаданных
+      + источники пустые/кривые, не мапятся на файлы
+end note
+
+' =====================================================
+== Step 4: Model Change / Смена модели ==
+' =====================================================
+CFG -> UPD : embedder/LLM changed (version++)
+UPD -> CH : full rechunking
+CH --> UPD : chunks + metadata
+CH -> EMB : embed chunks
+EMB --> UPD: vectors
+UPD -> IDX : build/update index (index_version)
+IDX -> VDB : upsert/delete vectors +\n metadata
+VDB --> IDX: ACK
+IDX --> UPD: build summary (#docs/#chunks/#errors)
+note right of CFG
+Проблемы + симптомы:
+- **Embedding Model Change w/o Reindex** /
+   сменили embedder без реиндекса
+      + резкая деградация поиска без очевидных причин
+- **LLM Change** / смена LLM
+      + выросли отказы/галлюцинации/изменилась полнота
+      при том же retrieval
+end note
+
+' =====================================================
+== Step 5: Generation Config Change / Промпт + безопасность ==
+' =====================================================
+CFG -> CFG : prompt/safety/temperature updated (version++)
+note right of CFG
+Проблемы + симптомы:
+- **Prompt Regression** / регрессия промпта
+      + ответы стали хуже/короче, чаще нет смысла или деталей
+- **Over-Strict Safety** / слишком строгая безопасность
+      + ложные отказы ("нет данных") на вопросах, где раньше отвечало
+- **Temperature/Determinism Shift** / сдвиг стохастики/детерминизма
+      + ответы "плавают" между запусками на одинаковом вводе
+end note
+
+@enduml

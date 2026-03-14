@@ -1,0 +1,118 @@
+version: "3.9"
+
+services:
+  chroma:
+    image: chromadb/chroma:1.3.5
+    container_name: chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/data
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-FALSE}
+    ports:
+      - "8000:8000"
+    volumes:
+      # НЕ /chroma/chroma черт возьми!
+      # from task7
+      - ./chroma_db:/data
+    networks:
+      - rag-app-net
+
+  rag-kb-updater:
+    build: ./rag_kb_updater
+    container_name: rag-kb-updater
+    env_file:
+      - ./rag_kb_updater/.env
+    environment:
+      # rewrites localhost
+      - RAG_API_SAFE_URL=http://rag-api-safe:8002
+      # rewrites ../chroma_db
+      - CHROMA_DB_DIR=./chroma_db
+      - CHROMA_MODE=http
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+      - SCHED_CRON=*/2 * * * *
+      - SCHED_RUN_ON_START=true
+    depends_on:
+      - chroma
+      - rag-api-safe
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      # нужно для PERSISTENT клиента (но rag-api-safe и rag-kb-updater не смогут работать вместе)
+      # в docker только для подсчета размера
+      - ./chroma_db:/chroma_db
+      - ./knowledge_base:/knowledge_base
+      - ./rag_kb_updater/_artifacts:/app/_artifacts
+      - ./rag_kb_updater/_runs:/app/_runs
+      - ./rag_kb_updater/_golden:/app/_golden
+    networks:
+      - rag-app-net
+
+  rag-monitor:
+    build: ./rag-monitor
+    container_name: rag-monitor
+    env_file:
+      - ./rag-monitor/.env
+      - ./rag-monitor/.env.secrets
+    environment:
+      # rewrites localhost
+      - RAG_API_BASE_URL=http://rag-api-safe:8002
+      # rewrites false
+      - RUN_ON_START=true
+      - KB_RUNS_DIR=./rag_kb_updater/_runs
+      - SCHED_CRON=*/2 * * * *
+    depends_on:
+      - rag-api-safe
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ./rag-monitor/_runs:/app/_runs
+      - ./rag-monitor/_metrics:/app/_metrics
+      - ./rag-monitor/_golden:/app/_golden
+      - ./rag_kb_updater:/app/rag_kb_updater
+    networks:
+      - rag-app-net
+
+  rag-api-safe:
+    build: ./rag-api-safe
+    container_name: rag-api-safe
+    env_file:
+      - ./rag-api-safe/.env
+      - ./rag-api-safe/.env.secrets
+    environment:
+      # rewrites ../chroma_db
+      - CHROMA_DB_PATH=/app/chroma_db
+      - CHROMA_MODE=http
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+    ports:
+      - "8002:8002"
+    depends_on:
+      - chroma
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      # нужно для PERSISTENT клиента (но rag-api-safe и rag-kb-updater не смогут работать вместе)
+#      - ./chroma_db:/app/chroma_db
+    restart: unless-stopped
+    networks:
+      - rag-app-net
+
+  tg-rag-sw-bot-safe:
+    build: ../task5/tg-rag-sw-bot-safe
+    container_name: tg-rag-sw-bot-safe
+    env_file:
+      - ../task5/tg-rag-sw-bot-safe/.env
+      - ../task5/tg-rag-sw-bot-safe/.env.secrets
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOG_DIR=/app/logs
+    ports:
+      - "8001:8001"
+    depends_on:
+      - chroma
+      - rag-api-safe
+    restart: unless-stopped
+    networks:
+      - rag-app-net
+
+networks:
+  rag-app-net:
+    driver: bridge

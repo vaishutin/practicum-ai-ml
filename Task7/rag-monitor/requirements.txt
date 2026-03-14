@@ -1,0 +1,7 @@
+apscheduler==3.11.2
+
+python-dotenv== 1.2.1
+torch==2.8.0
+httpx==0.28.1
+ragas==0.4.2
+openai==2.8.1

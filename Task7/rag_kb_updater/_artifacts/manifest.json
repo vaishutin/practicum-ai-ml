@@ -1,0 +1,142 @@
+{
+  "places/Татуин.md": {
+    "size": 7148,
+    "mtime": 1767026802.5225317,
+    "sha256": "34e9e02669ed9d220fabfe73df51361062678d573513e1bec9127f293d411449"
+  },
+  "places/Корусант.md": {
+    "size": 20150,
+    "mtime": 1767026802.50292,
+    "sha256": "6e252fc72a0e084f1a3f32f25b6a822365c9b80793bac5fa551eae77d152de1d"
+  },
+  "places/Облачный_город.md": {
+    "size": 15850,
+    "mtime": 1767026802.5129237,
+    "sha256": "52fe2d7299ec24c31458803b43d8e6ab5d5de2c0f5b4179337e86583e5f7c52c"
+  },
+  "places/Хот.md": {
+    "size": 3039,
+    "mtime": 1767026802.530836,
+    "sha256": "48f1536928a44a1a4ff5e9b58c59f549d1c235ab4bb618f0562c2212d881848e"
+  },
+  "events/Битва_при_Эндоре.md": {
+    "size": 43612,
+    "mtime": 1767026802.4633865,
+    "sha256": "727a1a7695b24700242998b06618d15d1a58396dc0451971ca430c50c05db9b0"
+  },
+  "events/Битва_при_Джакку.md": {
+    "size": 58620,
+    "mtime": 1767026802.4466417,
+    "sha256": "e110bb838af48f99c11c7d100186c79f986dbda0ad3c6d6cf680748939128c73"
+  },
+  "events/Битва_при_Явине.md": {
+    "size": 18989,
+    "mtime": 1767026802.4724803,
+    "sha256": "73b999ea9b4fb8c7bcce9a2f8f21394f61c7eb087de5847821e99ce756f86585"
+  },
+  "events/ПБЯ.md": {
+    "size": 431,
+    "mtime": 1767026802.4818673,
+    "sha256": "8decf0e69cfb74677279de8de90f010b96f874c00c65bf4bb4c3437b77429ee6"
+  },
+  "events/Секретная_миссия_на_Татуине.md": {
+    "size": 5908,
+    "mtime": 1767026802.4922948,
+    "sha256": "21f91ed5a2ac756c63fbb273a1d7584c0981246b639e489bb2905c66a230727c"
+  },
+  "events/Битва_при_Хоте.md": {
+    "size": 19057,
+    "mtime": 1767026802.4534886,
+    "sha256": "54f4b515aae2364dfd13f57db7d904fd8c5f6320dfeb0fe739c7a193d578f1b2"
+  },
+  "characters/rebels/Адмирал_Акбар.md": {
+    "size": 2940,
+    "mtime": 1767026802.3982148,
+    "sha256": "7629682974e9e583de846a1c75cf1e3556d4482ee591ba0edfdcc52d8656af50"
+  },
+  "characters/rebels/Дженни_Ли_Таггар.md": {
+    "size": 927,
+    "mtime": 1767026802.4171283,
+    "sha256": "c4b15d22db46920d47ba3011d53499bff2877661e95c3d8c83d6cc3daeec62f5"
+  },
+  "characters/rebels/Граак.md": {
+    "size": 473,
+    "mtime": 1767026802.4073925,
+    "sha256": "53555e9bec840c579abf48c6a3cb15f3339f145f3d02593faa2490060fa4a1eb"
+  },
+  "characters/empire/СейтПестаж.md": {
+    "size": 2484,
+    "mtime": 1767026802.3794827,
+    "sha256": "42ab3ae2ef1c7204ff7f905c95e2bb0f9856ea7e22c6b1b23ec1d8aad140df84"
+  },
+  "characters/empire/Вейдер.md": {
+    "size": 12800,
+    "mtime": 1767026802.351536,
+    "sha256": "524055f86f95b2ffbe39262e9c7f7ef2b8446d2e8b6ac17c2f2c992013c2b8f1"
+  },
+  "characters/empire/Ширано.md": {
+    "size": 2973,
+    "mtime": 1767026802.3888726,
+    "sha256": "c6b7321543c8ca8b24455dc57bcf96afe97d27a320ad3397e49a3a3d6f344d43"
+  },
+  "characters/empire/Джофф.md": {
+    "size": 1610,
+    "mtime": 1767026802.3608253,
+    "sha256": "35aa5b755eddf1fe0ce9a7e9e96d7e1f408372951790fc0c3e7c192dd57acb9d"
+  },
+  "characters/empire/Палпатин.md": {
+    "size": 13990,
+    "mtime": 1767026802.3699443,
+    "sha256": "2b6571336c7439d78f17bfa258a8752a6ab5faa18979f96780c8d50b47e8e358"
+  },
+  "tech/Y_wing.md": {
+    "size": 9200,
+    "mtime": 1767026802.6256804,
+    "sha256": "1e761342a8c975ddb5fcddcd54db8d9f7cd5bb84bdd54c141883201029e2c5fd"
+  },
+  "tech/rebels/Светлая_сторона_силы.md": {
+    "size": 6129,
+    "mtime": 1767026802.5954814,
+    "sha256": "29db9f6b10b87056fa36ac0dc5d8bd2d69aca36464705f24a1f90961d0b42439"
+  },
+  "tech/rebels/Световой_меч.md": {
+    "size": 3628,
+    "mtime": 1767026802.6064804,
+    "sha256": "0fe15010b8967e0b7c434f74a1669dbe1ac7262781303333a52d958b61d2a329"
+  },
+  "tech/rebels/X_wing.md": {
+    "size": 6088,
+    "mtime": 1767026802.5870962,
+    "sha256": "b2f29f88fc45229f4408152de7a5752a52c613ce7b3ac5a7344d0bd947220c68"
+  },
+  "tech/rebels/Тысячелетний_сокол.md": {
+    "size": 4817,
+    "mtime": 1767026802.6155977,
+    "sha256": "56f4036b97ce8d6053ca7c4501832e95ac4885dc14e67d7cd460e2b8a343cdc9"
+  },
+  "tech/empire/AT_ST.md": {
+    "size": 4283,
+    "mtime": 1767026802.5402713,
+    "sha256": "de9906812d39b566379cf8159917c31c2fcc100d13b3b799239731c243e027b3"
+  },
+  "tech/empire/Имперский_звездный_разрушитель.md": {
+    "size": 2234,
+    "mtime": 1767026802.5771234,
+    "sha256": "bac83e39ed40cdb09644a11ae0345555ec9b74b4bf2da00cc50879ed9db9b6ed"
+  },
+  "tech/empire/Звезда_смерти_1.md": {
+    "size": 19955,
+    "mtime": 1767026802.5682833,
+    "sha256": "fad04976123b4aed44ef7707887a37e31d3c949689670ef9ff500176bf761d5e"
+  },
+  "tech/empire/TIE_ln.md": {
+    "size": 7880,
+    "mtime": 1767026802.5501337,
+    "sha256": "90e7a4ced6209125d710ee6875922062679630f9c28e5261bae7f1eaed68714c"
+  },
+  "tech/empire/Бластер.md": {
+    "size": 8925,
+    "mtime": 1767026802.5598114,
+    "sha256": "a38cd4b180ca1194f1255b6cd6724abf97a04ce0a339348ac11b41283ca3c9dc"
+  }
+}

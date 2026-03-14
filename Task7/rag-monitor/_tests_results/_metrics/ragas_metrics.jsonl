@@ -1,0 +1,4 @@
+{"ts": "2026-01-12T23:44:47.402852Z", "run_id": "2026-01-12T23-28-00Z", "mode": "few_shot", "model": "gpt-4o-mini", "count": 10, "faithfulness_avg": 0.933, "answer_relevancy_avg": 0.396}
+{"ts": "2026-01-12T23:47:59.137031Z", "run_id": "2026-01-12T23-32-00Z", "mode": "few_shot", "model": "gpt-4o-mini", "count": 10, "faithfulness_avg": 0.941, "answer_relevancy_avg": 0.744}
+{"ts": "2026-01-12T23:49:56.347232Z", "run_id": "2026-01-12T23-36-00Z", "mode": "few_shot", "model": "gpt-4o-mini", "count": 10, "faithfulness_avg": 0.833, "answer_relevancy_avg": 0.48}
+{"ts": "2026-01-12T23:51:07.823464Z", "run_id": "2026-01-12T23-38-00Z", "mode": "few_shot", "model": "gpt-4o-mini", "count": 10, "faithfulness_avg": 0.872, "answer_relevancy_avg": 0.851}

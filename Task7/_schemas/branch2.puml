@@ -1,0 +1,106 @@
+@startuml
+title ONLINE — User -> rag-api (Retriever + Embedder + Pipeline) -> Vector DB -> LLM -> Answer
+
+autonumber
+hide footbox
+
+actor User
+
+box "rag-api" #F3FFF0
+  participant Retriever as RET
+  participant Embedder as EMB
+  participant Pipeline as PIPE
+end box
+
+database "Vector DB (Chroma)" as VDB
+participant LLM as LLM
+
+== Step 1: User Query / Запрос пользователя ==
+User -> PIPE : question
+PIPE -> RET : search in database
+
+note right of RET
+Проблемы + симптомы:
+- **Ambiguous Query** / Неоднозначный вопрос
+        +   ответ "не про то", разные трактовки
+- **Underspecified Query** / Слишком общий вопрос
+        +   ответ поверхностный, без конкретики
+- **Alias/OOV Mismatch** / Несовпадение терминов/алиасов
+        +   ответ уходит в общие темы или не затрагивает нужное
+- Long/Multi-Question / Длинный или многосоставной вопрос
+        +   покрыта только часть подпунктов
+end note
+
+== Step 2: Retrieval / Поиск ==
+RET -> EMB : embed question
+EMB --> RET : q_vector
+
+note right of EMB #FFF2CC
+Проблемы + симптомы:
+- **Embedding Model Mismatch** / Несовпадение модели эмбеддингов
+       + резкая деградация retrieval после смены модели
+- **Embedding Drift** / Дрейф эмбеддингов
+       + старые и новые документы плохо сравниваются
+- **Different Models for Index & Query** / Разные модели для индекса и запроса
+       +  релевантные документы не находятся
+- **Wrong Normalization** / Неверная нормализация векторов
+       +   поиск возвращает нерелевантные чанки
+end note
+
+RET -> VDB : vector_search(q_vector, top_k, filters)
+VDB --> RET : candidates(chunks+metas+scores)
+
+note right of VDB
+Проблемы + симптомы:
+- **Coverage Loss** / Потеря покрытия (на retrieval)
+          +   релевантные чанки не возвращаются
+- **Poor Retrievability** / Плохая извлекаемость
+          +   общие рассуждения вместо механизма/факта
+- **Retrieval Noise** / Шум в поиске
+          +   лишние источники, ответ уходит в сторону
+- **Low Diversity** / Низкое разнообразие источников
+          +   топ-чанки из одного документа
+end note
+
+== Step 3: Context Building + Safety / Контекст + защита ==
+RET -> PIPE : candidates + question
+PIPE -> PIPE : BM25, reranking, meta filters
+PIPE -> PIPE : safety filters (anti-injection / secrets) + taking topK
+
+note right of PIPE
+Проблемы + симптомы:
+- **Context Window Overflow** / Переполнение окна контекста
+        +   неполный ответ (пропуски, обрывы)
+- **Over-Filtering** / Слишком жёсткая фильтрация
+        +   контекст обеднён, ответы хуже
+- **Prompt/Context Injection** / Инъекция через контекст
+        +   модель следует инструкциям из чанка
+- **Secret Leakage Risk** / Риск утечки секретов
+        +   sensitive-данные попадают в контекст
+- **Wrong Context Mixing** / Смешение тем
+        +   ответ "компот"
+end note
+
+== Step 4: Generation / Генерация ==
+PIPE -> PIPE : building prompt for zero_shot/few_shot/cot
+PIPE -> LLM : sending (prompt + context)
+LLM --> PIPE : LLM answer
+PIPE --> User : final templated answer\n(zero_shot/few_shot/cot)
+
+note right of LLM
+Проблемы + симптомы:
+- **Hallucination** / Галлюцинация
+        +   выдуманные факты
+- **Unjustified Abstention** / Необоснованный отказ
+        +   "нет данных", хотя контекст есть
+- **Partial Answer** / Неполный ответ
+        +   пропущены важные детали
+- **Model Limits Hit** / Лимиты модели
+        +   обрывы/сжатие/пропуски пунктов
+- **Format/Instruction Failure** / Срыв формата
+        +   не соблюдает структуру
+- **Instability** / Нестабильность
+        +   разные ответы на одинаковый ввод
+end note
+
+@enduml

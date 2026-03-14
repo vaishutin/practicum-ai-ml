@@ -1,0 +1,98 @@
+@startuml
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam defaultFontName Arial
+skinparam ranksep 70
+skinparam nodesep 40
+
+title Диграмма компонентов rag-kb-updater — обновление индекса
+
+package "rag-kb-updater (container)" {
+
+  component "Scheduler\n(cron: every 1 min)" as Scheduler
+  component "UpdaterJob" as Job
+
+  component "DiffEngine" as Diff
+  component "ManifestStore" as Manifest
+
+  component "Chunker" as Chunker
+
+  component "IndexBuilder\n(Embeddings + Upsert)" as IndexBuilder
+  component "Chroma HTTP Client" as ChromaClient
+
+  component "RunSummaryWriter" as Summary
+}
+
+package "Host / Volumes" {
+  artifact "Knowledge Base\n*.md" as KB
+  artifact "_artifacts/manifest.json" as ManifestFile
+  artifact "_artifacts/prepred_chunks/BAAI--bge-m3_1024_130.jsonl\n(always rewrite)" as ChunksFile
+  artifact "updater.log" as TextLog
+  artifact "_runs/runs.jsonl" as JsonlLog
+}
+
+package "chroma (container)" {
+  database "Collection / Index" as Collection
+}
+
+' --- запуск ---
+Scheduler --> Job
+
+' --- diff ---
+Job --> Diff
+Diff --> KB
+note right of Diff
+Detect:
+- added
+- modified
+- deleted
+end note
+
+Job --> Manifest
+Manifest --> ManifestFile
+
+' --- (layout only) раздвигаем уровни без фейковых блоков ---
+Manifest -[hidden]-> Chunker
+
+' --- chunking ---
+Chunker --> KB
+Chunker --> ChunksFile
+note right of Chunker
+Chunks file is always rewritten
+(cheap operation)
+end note
+
+' --- (layout only) ---
+Chunker -[hidden]-> ChromaClient
+
+' --- delete ---
+Job --> ChromaClient
+ChromaClient --> Collection
+note right of ChromaClient
+Delete all chunks where:
+metadata.rel_doc_id
+in (deleted + modified)
+end note
+
+' --- (layout only) ---
+ChromaClient -[hidden]-> IndexBuilder
+
+' --- upsert ---
+IndexBuilder --> ChunksFile
+IndexBuilder --> ChromaClient
+ChromaClient --> Collection
+note right of IndexBuilder
+Upsert for added + modified
+
+embedding_id =
+"{file_name::chunk_no}"
+(stable primary key)
+end note
+
+' --- logs ---
+Job --> TextLog
+Job --> Summary
+Summary --> JsonlLog
+
+@enduml

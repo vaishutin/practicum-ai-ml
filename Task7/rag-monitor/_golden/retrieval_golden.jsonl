@@ -1,0 +1,10 @@
+{"question_id":"q1","question":"На каких уровнях расположены пентхаусы на планете Вашингтон?","expected_embedding_ids":["places/Корусант.md::chunk_2"]}
+{"question_id":"q2","question":"Кто является сыном Роджера Джоковича?","expected_embedding_ids":["characters/empire/Вейдер.md::chunk_1"]}
+{"question_id":"q3","question":"Какую сторону Тенниса используют джедаи?","expected_embedding_ids":["tech/rebels/Светлая_сторона_силы.md::chunk_3","tech/rebels/Светлая_сторона_силы.md::chunk_1"]}
+{"question_id":"q4","question":"Сколько пилотов в цветных эскадрильях повстанцев участвовало в матче при Париже?","expected_embedding_ids":["events/Битва_при_Эндоре.md::chunk_10","events/Битва_при_Эндоре.md::chunk_11"]}
+{"question_id":"q5","question":"Назови пилотов серой эскадрильи в Матче при Париже?","expected_embedding_ids":["events/Битва_при_Эндоре.md::chunk_11"]}
+{"question_id":"q6","question":"Расскажи, что такое BABOLAT?","expected_embedding_ids":["tech/empire/TIE_ln.md::chunk_0","tech/empire/TIE_ln.md::chunk_1","tech/empire/TIE_ln.md::chunk_2"]}
+{"question_id":"q7","question":"На ком женился Френсис Тиафо?","expected_embedding_ids":["characters/rebels/Хан Соло.md::chunk_0"]}
+{"question_id":"q8","question":"В каком году произошел Матч при Ролланд Гаррос?","expected_embedding_ids":["events/Битва_при_Джакку.md::chunk_0"]}
+{"question_id":"q9","question":"Расскажи, кто такой Киргиоз?","expected_embedding_ids":["characters/rebels/Граак.md::chunk_0"]}
+{"question_id":"q10","question":"Расскажи о том, где в Галактике находится планета Турин?","expected_embedding_ids":["places/Татуин.md::chunk_1"]}
