@@ -1,31 +1,31 @@
 
 == Structural checks ==
-[OK] Project template - /Users/vaishutin/practicum-ai-ml/Project_template.md
-[OK] Task1 README - /Users/vaishutin/practicum-ai-ml/Task1/README.md
-[OK] Task2 README - /Users/vaishutin/practicum-ai-ml/Task2/README.md
-[OK] Task3 README - /Users/vaishutin/practicum-ai-ml/Task3/README.md
-[OK] Task4 README - /Users/vaishutin/practicum-ai-ml/Task4/README.md
-[OK] Task5 README - /Users/vaishutin/practicum-ai-ml/Task5/README.md
-[OK] Task6 README - /Users/vaishutin/practicum-ai-ml/Task6/README.md
-[OK] Task7 README - /Users/vaishutin/practicum-ai-ml/Task7/README.md
+[OK] Project template - /Users/foxy-gal/practicum-ai-ml/Project_template.md
+[OK] Task1 README - /Users/foxy-gal/practicum-ai-ml/Task1/README.md
+[OK] Task2 README - /Users/foxy-gal/practicum-ai-ml/Task2/README.md
+[OK] Task3 README - /Users/foxy-gal/practicum-ai-ml/Task3/README.md
+[OK] Task4 README - /Users/foxy-gal/practicum-ai-ml/Task4/README.md
+[OK] Task5 README - /Users/foxy-gal/practicum-ai-ml/Task5/README.md
+[OK] Task6 README - /Users/foxy-gal/practicum-ai-ml/Task6/README.md
+[OK] Task7 README - /Users/foxy-gal/practicum-ai-ml/Task7/README.md
 
 == Task2 checks ==
 [OK] knowledge_base md files - count=30
 [OK] raw_db md files - count=30
-[OK] terms_map.json - /Users/vaishutin/practicum-ai-ml/Task2/raw_db/terms_map.json
+[OK] terms_map.json - /Users/foxy-gal/practicum-ai-ml/Task2/raw_db/terms_map.json
 
 == Task3/5 scripts syntax ==
 [OK] Python syntax check - py_compile
 
 == Docker compose files ==
-[OK] Task4 compose - /Users/vaishutin/practicum-ai-ml/Task4/docker-compose.yml
-[OK] Task5 compose - /Users/vaishutin/practicum-ai-ml/Task5/docker-compose.yml
-[OK] Task6 compose - /Users/vaishutin/practicum-ai-ml/Task6/docker-compose.yml
-[OK] Task7 compose - /Users/vaishutin/practicum-ai-ml/Task7/docker-compose.yml
+[OK] Task4 compose - /Users/foxy-gal/practicum-ai-ml/Task4/docker-compose.yml
+[OK] Task5 compose - /Users/foxy-gal/practicum-ai-ml/Task5/docker-compose.yml
+[OK] Task6 compose - /Users/foxy-gal/practicum-ai-ml/Task6/docker-compose.yml
+[OK] Task7 compose - /Users/foxy-gal/practicum-ai-ml/Task7/docker-compose.yml
 
 == Optional artifacts ==
-[OK] Task3 prepared - /Users/vaishutin/practicum-ai-ml/Task3/prepared
-[OK] Task3 chroma - /Users/vaishutin/practicum-ai-ml/Task3/chroma_db/chroma.sqlite3
+[OK] Task3 prepared - /Users/foxy-gal/practicum-ai-ml/Task3/prepared
+[OK] Task3 chroma - /Users/foxy-gal/practicum-ai-ml/Task3/chroma_db/chroma.sqlite3
 
 == Full smoke checks ==
 [OK] Task3 smoke - chunks -> index
