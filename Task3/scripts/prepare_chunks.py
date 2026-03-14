@@ -7,10 +7,16 @@ from pathlib import Path
 import time
 from typing import List, Tuple
 from transformers import AutoTokenizer
-from langchain.text_splitter import (
-    MarkdownHeaderTextSplitter,
-    RecursiveCharacterTextSplitter,
-)
+try:
+    from langchain.text_splitter import (
+        MarkdownHeaderTextSplitter,
+        RecursiveCharacterTextSplitter,
+    )
+except ModuleNotFoundError:  # langchain>=0.2 split
+    from langchain_text_splitters import (  # type: ignore
+        MarkdownHeaderTextSplitter,
+        RecursiveCharacterTextSplitter,
+    )
 
 HEADER_TOKENS_DEFAULT = 20
 MIN_SECTION_TOKENS = 350
