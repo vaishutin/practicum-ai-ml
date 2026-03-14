@@ -9,6 +9,8 @@
 - [Задание 7](./Task7/README.md)
 
 ## Проверка проекта
+Результат локального запуска можно посмотреть в [script-output.logs](./script-output.logs)
+
 Быстрая проверка структуры и скриптов:
 ```bash
 .venv/bin/python verify_project.py
